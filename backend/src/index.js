@@ -1,10 +1,11 @@
 
 
 require('dotenv').config();
-const fs = require('fs');
 const express = require('express');
 const sql = require('mssql');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 app.use(express.json());
@@ -32,8 +33,63 @@ async function getConnection() {
     }
 }
 
+// Middleware para verificar el token
+function verificarToken(req, res, next) {
+    const token = req.headers['authorization']?.split(' ')[1]; // formato: Bearer TOKEN
+
+    if (!token) {
+        return res.status(403).json({ error: 'Token requerido' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || "secreto_super_seguro");
+        req.user = decoded;
+        next();
+    } catch (err) {
+        return res.status(401).json({ error: 'Token inválido o expirado' });
+    }
+}
+
+// LOGIN
+app.post('/api/login', async (req, res) => {
+    try {
+        const { usuario, contraseña } = req.body;
+        const pool = await getConnection();
+
+        const result = await pool.request()
+            .input('usuario', sql.VarChar, usuario)
+            .query('SELECT * FROM Usuarios WHERE usuario = @usuario');
+
+        if (result.recordset.length === 0) {
+            return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+        }
+
+        const user = result.recordset[0];
+
+        // ⚠️ Si aún guardas contraseñas en texto plano, compara directo
+        //const passwordMatch = contraseña === user.contraseña;
+        // 👉 Mejor: si ya las migraste a hash, haz esto:
+        const passwordMatch = await bcrypt.compare(contraseña, user.contraseña);
+
+        if (!passwordMatch) {
+            return res.status(401).json({ error: 'Usuario o contraseña incorrectos' });
+        }
+
+        // 🔐 Crear token con expiración
+        const token = jwt.sign(
+            { id: user.id, usuario: user.usuario },
+            process.env.JWT_SECRET || "secreto_super_seguro",
+            { expiresIn: '2h' } // expira en 2 horas
+        );
+
+        res.json({ token });
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
+
 // GET /api/listado → todos los Invitados
-app.get('/api/listado', async (req, res) => {
+app.get('/api/listado', verificarToken, async (req, res) => {
     try {
         const pool = await getConnection();
         const result = await pool.request().query('SELECT * FROM Invitados');
@@ -44,7 +100,7 @@ app.get('/api/listado', async (req, res) => {
 });
 
 // PUT /api/invitado/:id → obtener invitado y actualizar estatus según reglas
-app.put('/api/invitado/:id', async (req, res) => {
+app.put('/api/invitado/:id', verificarToken, async (req, res) => {
     try {
         const { id } = req.params;
         const pool = await getConnection();

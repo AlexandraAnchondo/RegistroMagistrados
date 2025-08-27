@@ -2,14 +2,13 @@ import * as React from 'react';
 import { Outlet } from 'react-router';
 import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 import { Box, Typography } from '@mui/material';
+import LogoutButton from '../components/LogoutButton';
 
 export default function Layout() {
-  // Leer atributo en tiempo real
   const [colorScheme, setColorScheme] = React.useState(
     document.documentElement.getAttribute('data-toolpad-color-scheme') || 'light'
   );
 
-  // Listener para cambios
   React.useEffect(() => {
     const observer = new MutationObserver(() => {
       const scheme = document.documentElement.getAttribute('data-toolpad-color-scheme') || 'light';
@@ -26,8 +25,15 @@ export default function Layout() {
 
   return (
     <DashboardLayout>
+      {/* 🔑 Botón logout arriba */}
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', p: 2 }}>
+        <LogoutButton />
+      </Box>
+
+      {/* Aquí se pintan las páginas hijas */}
       <Outlet />
 
+      {/* Footer */}
       <Box
         component="footer"
         sx={{

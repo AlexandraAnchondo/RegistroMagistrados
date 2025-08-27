@@ -16,11 +16,31 @@ export default function MovimientosPage() {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const fetchData = () => {
+        const token = localStorage.getItem("token");
         axios
-            .get(`${import.meta.env.VITE_API_URL}/api/listado`, { withCredentials: true })
+            .get(`${import.meta.env.VITE_API_URL}/api/listado`, {
+                headers: {
+                    Authorization: `Bearer ${token}`, 
+                },
+                withCredentials: true,
+            })
             .then((res) => setInvitados(res.data))
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                console.error(err);
+
+                // si el token ya expiró o es inválido, saco al usuario al login
+                if (err.response && err.response.status === 401) {
+                    localStorage.removeItem("token");
+                    localStorage.setItem("isLoggedIn", "false");
+                    window.location.href = "/login";
+                }
+            });
     };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
 
     useEffect(() => {
         fetchData();

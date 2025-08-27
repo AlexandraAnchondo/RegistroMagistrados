@@ -1,0 +1,19 @@
+h1 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    font-family: 'Poppins', sans-serif;
+}
+
+.card-title {
+    color: var(--child-row)
+}
+
+.card {
+    background-color: var(--card-color);
+    box-shadow: 3
+}
+
+.card2 {
+    background-color: var(--card2-color);
+    box-shadow: 3
+}

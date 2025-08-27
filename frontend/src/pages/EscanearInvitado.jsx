@@ -58,14 +58,33 @@ export default function EscanearInvitado() {
                             return;
                         }
 
-                        const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/invitado/${data.id}`);
+                        const res = await axios.put(
+                            `${import.meta.env.VITE_API_URL}/api/invitado/${data.id}`,
+                            {},
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                                },
+                                withCredentials: true,
+                            }
+                        );
+
                         setResult(res.data);
                         await stopScanner();
                     } catch (err) {
                         console.error(err);
-                        setAlert({ open: true, message: "Error leyendo el QR", severity: "error" });
+
+                        if (err.response && err.response.status === 401) {
+                            localStorage.removeItem("token");
+                            localStorage.setItem("isLoggedIn", "false");
+                            window.location.href = "/login";
+                        } else {
+                            setAlert({ open: true, message: "Error leyendo el QR", severity: "error" });
+                        }
+
                         processingRef.current = false;
                     }
+
                 }
             ).catch((err) => console.error("Error iniciando scanner:", err));
 

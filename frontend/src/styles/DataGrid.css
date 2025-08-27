@@ -8,6 +8,8 @@
     --section-color-disabled: #dfdfdf;
     --selected-color: #ffdce7a4;
     --dark-mode-btn: #ffe6ee;
+    --card-color: #8a5d6ba4;
+    --card2-color: #947654a4;
 }
 
 [data-toolpad-color-scheme="dark"] {
@@ -19,6 +21,8 @@
     --primary-color: #9b7d45;
     --dark-mode-btn: #ffdea0;
     --selected-color: #4444449c;
+    --card-color: #ffdce7a4;
+    --card2-color: #fff9dca4;
 }
 
 .MuiSvgIcon-fontSizeSmall {

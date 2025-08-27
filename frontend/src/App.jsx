@@ -18,6 +18,12 @@ const NAVIGATION = [
     icon: <AddIcon />,
     pattern: 'form',
   },
+  {
+    segment: 'confirmados',
+    title: 'Ver confirmados',
+    icon: <AddIcon />,
+    pattern: 'confirmados',
+  },
 ];
 
 const BRANDING = {
