@@ -1,0 +1,194 @@
+/* Importar variables globales */
+:root {
+    --child-row: #ffebf2;
+    --row-hover: #fff4dc;
+    --border-color: #cccccc;
+    --primary-color: #681f36;
+    --section-color: #fff4dc;
+    --section-color-disabled: #dfdfdf;
+    --selected-color: #ffdce7a4;
+    --dark-mode-btn: #ffe6ee;
+}
+
+[data-toolpad-color-scheme="dark"] {
+    --child-row: #333842;
+    --row-hover: #4b5644;
+    --border-color: #555;
+    --section-color: #333842;
+    --section-color-disabled: #6e6e6e;
+    --primary-color: #9b7d45;
+    --dark-mode-btn: #ffdea0;
+    --selected-color: #4444449c;
+}
+
+.MuiSvgIcon-fontSizeSmall {
+    color: var(--primary-color) !important;
+}
+
+.MuiToolbar-root, .MuiToolbar-gutters, .MuiToolbar-regular, .MuiTypography-h6 {
+    background-color: var(--primary-color) !important; /* Color de fondo de la barra de herramientas */
+    color: white !important; /* Color del texto de la barra de herramientas */
+}
+
+.MuiIconButton-root {
+    color: var(--dark-mode-btn) !important; /* Color de los iconos en la barra de herramientas */
+}
+
+.MuiListItemButton-root.Mui-selected .MuiTypography-root {
+    color: var(--primary-color) !important; /* Color del texto */
+}
+
+.MuiButton-root {
+    color: var(--primary-color) !important; /* Color de fondo de la barra de herramientas */
+}
+
+.MuiListItemButton-root.Mui-selected {
+    background-color: var(--selected-color) !important; /* Color de fondo del elemento seleccionado */
+    color: white !important; /* Color del texto del elemento seleccionado */
+}
+
+.MuiListItemButton-root.Mui-selected svg {
+    color: var(--primary-color) !important;
+    /* Color del texto del elemento seleccionado */
+}
+
+.MuiDataGrid-row:nth-of-type(odd) {
+    background-color: var(--child-row);
+}
+
+.MuiDataGrid-row:nth-of-type(even) {
+    background-color: white;
+}
+
+[data-toolpad-color-scheme="dark"] .MuiDataGrid-row:nth-of-type(even) {
+    background-color: #262c35;
+}
+
+.MuiDataGrid-row:hover {
+    background-color: var(--row-hover) !important;
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell {
+    text-align: center !important;
+}
+
+/* Estilos generales para los encabezados */
+.MuiDataGrid-columnHeader {
+    background-color: var(--primary-color) !important; /* Fondo del encabezado */
+    color: white; /* Color del texto */
+    font-weight: bold; /* Negrita */
+    font-size: 1rem; /* Tamaño de fuente */
+    text-align: center !important; /* Centrar el texto */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.MuiDataGrid-columnHeaderTitleContainer {
+    justify-content: center !important; /* Centrar el título del encabezado */
+}
+
+/* Estilos para cada celda del encabezado */
+/*.MuiDataGrid-columnHeader {
+    border-right: 1px solid #000000 !important; //Lineas divisoras
+}*/
+
+.MuiDataGrid-columnHeader:last-of-type {
+    border-right: none !important; /* Sin línea divisoria en la última celda */
+}
+
+.data-grid-container {
+    width: 100%; /* Ancho completo */
+    justify-content: center; /* Centrar verticalmente */
+    box-sizing: border-box; /* Incluir padding y border en el ancho y alto */
+    background-color: transparent !important ;/* Fondo transparente */
+    box-shadow: none !important; /* Sin sombra */
+    border: none !important; /* Sin borde */
+}
+
+.data-table-container {
+display: flex;
+    justify-content: center;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: visible;
+    /* importante para desplegar menús */
+}
+
+/* Estilo adicional para limitar el tamaño de la tabla */
+.data-table {
+    width: 100%;
+        min-height: 500px;
+        /* altura suficiente para scroll y toolbar */
+        overflow: visible;
+        /* importante */
+}
+
+/* Alternar colores en las filas */
+.MuiDataGrid-row:nth-of-type(odd) {
+    background-color: var(--child-row); /* Color para filas impares */
+}
+
+.MuiDataGrid-row:nth-of-type(even) {
+    background-color: white; /* Color para filas pares */
+}
+
+/* Cambiar el color al pasar el mouse */
+.MuiDataGrid-row:hover {
+    background-color: var(--row-hover) !important; /* Color al hacer hover */
+}
+
+/* Aumentar la especificidad para centrar el texto en todas las celdas */
+.MuiDataGrid-root .MuiDataGrid-cell {
+    text-align: center !important; /* Centrar el texto en todas las celdas */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.MuiDataGrid-root .MuiTablePagination-displayedRows {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: var(--primary-color)
+}
+
+.MuiDataGrid-root .MuiDataGrid-toolbarContainer {
+    gap: 20px;
+}
+
+.css-1ccsd5i-MuiButtonBase-root-MuiButton-root {
+    color: var(--primary-color) !important;
+}
+
+/* Optimización para el renderizado de texto */
+.MuiDataGrid-root {
+    -webkit-font-smoothing: antialiased; /* Mejora la suavidad de las fuentes */
+    -moz-osx-font-smoothing: grayscale;  /* Mejora la suavidad de las fuentes en macOS */
+    text-rendering: optimizeLegibility;  /* Mejora la legibilidad en todos los navegadores */
+}
+
+.MuiDataGrid-root .MuiDataGrid-cell {
+    font-size: 14px;   /* Ajusta el tamaño de fuente si es necesario */
+    line-height: 1.5;  /* Mejora la legibilidad de las filas */
+}
+
+/* Ajustes del campo de búsqueda */
+.MuiTextField-root {
+    font-size: 14px; /* Ajusta el tamaño del texto en la barra de búsqueda */
+    line-height: 1.5; /* Aumenta la legibilidad del texto */
+    input {
+        font-size: 14px; /* Asegura que el tamaño del texto dentro del campo sea correcto */
+    }
+}
+
+.scan-button, .reset-button {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.reset-button {
+  background-color: #666;
+}
+
+
