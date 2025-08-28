@@ -5,6 +5,7 @@ import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { Html5Qrcode } from "html5-qrcode";
 import axios from "axios";
 import Card from "../components/Card";
+import { actualizarInvitado } from '../data/API';
 
 export default function EscanearInvitado() {
     const [scanning, setScanning] = useState(false);
@@ -58,18 +59,8 @@ export default function EscanearInvitado() {
                             return;
                         }
 
-                        const res = await axios.put(
-                            `${import.meta.env.VITE_API_URL}/api/invitado/${data.id}`,
-                            {},
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                                },
-                                withCredentials: true,
-                            }
-                        );
-
-                        setResult(res.data);
+                        const res = await actualizarInvitado(data.id);
+                        setResult(res);
                         await stopScanner();
                     } catch (err) {
                         console.error(err);
@@ -105,10 +96,6 @@ export default function EscanearInvitado() {
                 gap: 3,
             }}
         >
-            <Typography variant={isMobile ? "h5" : "h4"} textAlign="center">
-                Escanear Invitado
-            </Typography>
-
             {!scanning ? (
                 <Button
                     variant="contained"
@@ -126,7 +113,7 @@ export default function EscanearInvitado() {
                         setScanning(true);
                     }}
                 >
-                    Activar Cámara
+                    Escanear Invitado
                 </Button>
             ) : (
                 <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>

@@ -8,6 +8,7 @@ import { QRCodeCanvas } from "qrcode.react";
 import '../styles/Listado.css';
 import { shareQrImage } from "../components/shareQRImage";
 import Loader from '../components/Loader'
+import { fetchInvitados } from '../data/API';
 
 export default function MovimientosPage() {
     const [invitados, setInvitados] = useState([]);
@@ -16,35 +17,13 @@ export default function MovimientosPage() {
 
     const isMobile = useMediaQuery('(max-width:600px)');
 
-    const fetchData = () => {
-        const token = localStorage.getItem("token");
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/api/listado`, {
-                headers: {
-                    Authorization: `Bearer ${token}`, 
-                },
-                withCredentials: true,
-            })
-            .then((res) => setInvitados(res.data))
-            .catch((err) => {
-                console.error(err);
-
-                // si el token ya expiró o es inválido, saco al usuario al login
-                if (err.response && err.response.status === 401) {
-                    localStorage.removeItem("token");
-                    localStorage.setItem("isLoggedIn", "false");
-                    window.location.href = "/login";
-                }
-            });
-    };
-
     useEffect(() => {
-        fetchData();
-    }, []);
+        const loadData = async () => {
+            const data = await fetchInvitados();
+            if (data) setInvitados(data);
+        };
 
-
-    useEffect(() => {
-        fetchData();
+        loadData();
     }, []);
 
     const handleDownload = () => {
@@ -112,7 +91,7 @@ export default function MovimientosPage() {
                                 color: 'primary.main',
                             },
                         }}
-                        autoHeight={isMobile} // para que la tabla ajuste su altura automáticamente en móviles
+                        autoHeight={isMobile}
                     />
                 </div>
             )}

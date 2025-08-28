@@ -24,7 +24,7 @@ const StyledWrapper = styled.div`
     --main-color: #000;
     --submain-color: #78858F;
     --submain2-color:rgba(22, 90, 16, 1);
-    --bg-color: #fff;
+    --bg-color: #fcedf4ff;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     position: relative;
     width: 300px;
@@ -33,7 +33,7 @@ const StyledWrapper = styled.div`
     flex-direction: column;
     align-items: center;
     border-radius: 20px;
-    background: var(--bg-color);
+    background: var(--bg-color) !important;
   }
 
   .card__img {
@@ -82,35 +82,6 @@ const StyledWrapper = styled.div`
     font-weight: 500;
     font-size: 20px;
     color: var(--submain2-color);
-  }
-
-  .card__btn {
-    margin-top: 15px;
-    width: 76px;
-    height: 31px;
-    border: 2px solid var(--main-color);
-    border-radius: 4px;
-    font-weight: 700;
-    font-size: 11px;
-    color: var(--main-color);
-    background: var(--bg-color);
-    text-transform: uppercase;
-    transition: all 0.3s;
-  }
-
-  .card__btn-solid {
-    background: var(--main-color);
-    color: var(--bg-color);
-  }
-
-  .card__btn:hover {
-    background: var(--main-color);
-    color: var(--bg-color);
-  }
-
-  .card__btn-solid:hover {
-    background: var(--bg-color);
-    color: var(--main-color);
   }`;
 
 export default Card;
