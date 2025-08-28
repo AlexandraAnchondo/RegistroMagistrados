@@ -25,6 +25,10 @@
     --card2-color: #fff9dca4;
 }
 
+.logout-btn {
+    border-color: var(--primary-color) !important;
+}
+
 .MuiSvgIcon-fontSizeSmall {
     color: var(--primary-color) !important;
 }

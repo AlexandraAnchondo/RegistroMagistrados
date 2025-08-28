@@ -9,11 +9,13 @@ h1 {
 }
 
 .card {
-    background-color: var(--card-color);
-    box-shadow: 3
+    background-color: var(--card-color) !important;
+    box-shadow: 3;
+    width: 100%;
 }
 
 .card2 {
-    background-color: var(--card2-color);
-    box-shadow: 3
+    background-color: var(--card2-color) !important;
+    box-shadow: 3;
+    width: 100%;
 }

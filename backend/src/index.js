@@ -79,7 +79,7 @@ app.post('/api/login', async (req, res) => {
         const token = jwt.sign(
             { id: user.id, usuario: user.usuario },
             process.env.JWT_SECRET || "secreto_super_seguro",
-            { expiresIn: '2h' } // expira en 2 horas
+            { expiresIn: '4h' } // expira en 4 horas
         );
 
         res.json({ token });

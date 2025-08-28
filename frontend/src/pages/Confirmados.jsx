@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, Typography, Grid, useMediaQuery } from '@mui/material';
 import '../styles/Confirmados.css';
+import Loader from '../components/Loader'
 
 export default function ConfirmadosPage() {
     const [pendientes, setPendientes] = useState(0);
@@ -41,33 +42,41 @@ export default function ConfirmadosPage() {
         <div style={{ flex: 1, padding: isMobile ? "16px" : "32px" }}>
             <h1>Resumen de Invitados</h1>
 
-            <Grid container spacing={2}>
+            {pendientes === 0 && confirmados === 0 ? (
+                <div className="loading-container" style={{ marginTop: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Loader />
+                </div>
+            ) : (
                 <Grid item xs={12} sm={6}>
-                    <Card className='card'>
-                        <CardContent>
-                            <Typography variant="h5" className='card-title'>
-                                Confirmados
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold" sx={{ color: 'black !important' }}>
-                                {confirmados}
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
+                    <Grid container direction="column" spacing={5} style={{ alignItems: 'center', justifyContent: 'center' }}>
+                        <Grid item style={{ width: '80%' }}>
+                            <Card className='card'>
+                                <CardContent>
+                                    <Typography variant="h5" className='card-title'>
+                                        Ingresaron al edificio
+                                    </Typography>
+                                    <Typography variant="h4" fontWeight="bold" sx={{ color: 'black !important' }}>
+                                        {confirmados}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid> 
 
-                <Grid item xs={12} sm={6}>
-                    <Card className='card2'>
-                        <CardContent>
-                            <Typography variant="h5" className='card-title'>
-                                Pendientes
-                            </Typography>
-                            <Typography variant="h4" fontWeight="bold" sx={{ color: 'black !important' }}>
-                                {pendientes}
-                            </Typography>
-                        </CardContent>
-                    </Card>
+                        <Grid item style={{ width: '80%' }}>
+                            <Card className='card2'>
+                                <CardContent>
+                                    <Typography variant="h5" className='card-title'>
+                                        Pendientes
+                                    </Typography>
+                                    <Typography variant="h4" fontWeight="bold" sx={{ color: 'black !important' }}>
+                                        {pendientes}
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Grid>
                 </Grid>
-            </Grid>
+            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import logoImg from "../assets/logo_congreso.png"
 
-export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, download) => {
+export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, lugar, zona, share, download) => {
     if (!qrCanvas) {
         alert("No se pudo obtener el QR.")
         return
@@ -8,7 +8,6 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
 
     const qrSize = qrCanvas.width
     const padding = 60
-    const textBoxHeight = 50
     const spacing = 20
 
     // Cargar imagen del logo
@@ -16,9 +15,31 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
     logo.src = logoImg
 
     logo.onload = () => {
-        const logoHeight = 80
+        const logoHeight = 90
         const logoSpacing = 30
-        const height = qrSize + padding * 2 + (textBoxHeight + spacing) * 3 + logoHeight + logoSpacing
+
+        // --- Textos a mostrar ---
+        const textos = [
+            { text: `${nombre}`, font: "bold 20px 'Segoe UI', sans-serif" },
+            { text: `Tipo de Invitado: ${tipoInvitado}`, font: "bold 20px 'Segoe UI', sans-serif" },
+            { text: `Lugar: ${lugar}`, font: "regular 20px 'Segoe UI', sans-serif" },
+            { text: `Zona: ${zona}`, font: "regular 20px 'Segoe UI', sans-serif" },
+            { text: "Preséntalo para ingresar o salir", font: "italic 20px 'Segoe UI', sans-serif" }
+        ]
+
+        // --- Calcular altura total requerida para todos los textos ---
+        const ctxTemp = document.createElement("canvas").getContext("2d")
+        let totalTextHeight = 0
+        textos.forEach(({ text, font }) => {
+            ctxTemp.font = font
+            const metrics = ctxTemp.measureText(text)
+            const boxPaddingY = 20
+            const boxHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent + boxPaddingY * 2
+            totalTextHeight += boxHeight + spacing
+        })
+
+        // --- Definir tamaño del canvas final ---
+        const height = qrSize + padding * 2 + totalTextHeight + logoHeight + logoSpacing
         const width = qrSize + padding * 4
 
         const finalCanvas = document.createElement("canvas")
@@ -27,16 +48,23 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
         const ctx = finalCanvas.getContext("2d")
 
         // Fondo degradado
+
         const gradient = ctx.createLinearGradient(0, 0, 0, height)
-        gradient.addColorStop(0, "#ffffffff")
-        gradient.addColorStop(1, "#500d41ff")
+        if (tipoInvitado === "Toma Protesta") {
+            gradient.addColorStop(0, "#ffffffff")
+            gradient.addColorStop(1, "#500d41ff")
+        } else {
+            gradient.addColorStop(0, "#ffffffff")
+            gradient.addColorStop(1, "#6d6d6dff")
+        }
         ctx.fillStyle = gradient
         ctx.fillRect(0, 0, width, height)
+        
 
         // Dibujar logo centrado 
         const logoWidth = (logo.width / logo.height) * logoHeight
         const logoX = (width - logoWidth) / 2
-        const logoY = padding // lo ponemos arriba con margen
+        const logoY = padding
         ctx.drawImage(logo, logoX, logoY, logoWidth, logoHeight)
 
         // QR debajo del logo
@@ -44,7 +72,7 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
         const qrY = logoY + logoHeight + logoSpacing
         const borderRadius = 30
 
-        const borderPadding = 8 // grosor del margen
+        const borderPadding = 8 // grosor del marco blanco
         ctx.fillStyle = "#ffffff"
         drawRoundedRect(
             ctx,
@@ -56,64 +84,62 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
         )
         ctx.fill()
 
-
-
         // Dibujar QR dentro del marco
         ctx.drawImage(qrCanvas, qrX, qrY)
 
-        // Dibujar texto dentro de cajas blancas
-        const textos = [
-            { text: `Tipo de Invitado: ${tipoInvitado}`, font: "bold 22px 'Segoe UI', sans-serif" },
-            { text: "Preséntalo para ingresar o salir del edificio", font: "italic 18px 'Segoe UI', sans-serif" }
-        ]
-
-        let y = qrY + qrSize + spacing + 70
-
+        // --- Dibujar textos ---
+        let y = qrY + qrSize + spacing + 40
         textos.forEach(({ text, font }) => {
             ctx.font = font
-            const textWidth = ctx.measureText(text).width
-            const boxWidth = textWidth + 40
+            const textMetrics = ctx.measureText(text)
+            const textWidth = textMetrics.width
+            const boxPaddingX = 40
+            const boxPaddingY = 15
+
+            const boxWidth = textWidth + boxPaddingX * 2
+            const boxHeight = textMetrics.actualBoundingBoxAscent + textMetrics.actualBoundingBoxDescent + boxPaddingY * 2
+
             const boxX = (width - boxWidth) / 2
 
             // Caja blanca
             ctx.fillStyle = "#fff"
-            drawRoundedRect(ctx, boxX, y, boxWidth, textBoxHeight, 20)
+            drawRoundedRect(ctx, boxX, y, boxWidth, boxHeight, 20)
             ctx.fill()
 
             // Texto negro
             ctx.fillStyle = "#000"
             ctx.textAlign = "center"
             ctx.textBaseline = "middle"
-            ctx.fillText(text, width / 2, y + textBoxHeight / 2)
+            ctx.fillText(text, width / 2, y + boxHeight / 2)
 
-            y += textBoxHeight + spacing
+            y += boxHeight + spacing
         })
 
-        if(share) {
-            // Convertir a imagen y compartir
+        // --- Compartir imagen ---
+        if (share) {
             finalCanvas.toBlob(async (blob) => {
                 if (!blob) {
                     alert("No se pudo crear la imagen.")
                     return
                 }
-
-                const file = new File([blob], `${nombre || "qr"}.png`, { type: "image/png" });
+                const file = new File([blob], `${nombre || "qr"}.png`, { type: "image/png" })
                 if (navigator.share) {
                     try {
                         await navigator.share({
                             title: "QR Invitado",
                             text: `QR de ${nombre}`,
                             files: [file],
-                        });
+                        })
                     } catch (err) {
-                        console.error("Error compartiendo", err);
+                        console.error("Error compartiendo", err)
                     }
                 } else {
-                    setAlert({ open: true, message: "Tu navegador no soporta compartir imágenes", severity: "warning" });
+                    setAlert({ open: true, message: "Tu navegador no soporta compartir imágenes", severity: "warning" })
                 }
             })
         }
-        
+
+        // --- Descargar imagen ---
         if (download) {
             finalCanvas.toBlob((blob) => {
                 if (!blob) {
@@ -128,10 +154,9 @@ export const shareQrImage = async (qrCanvas, nombre, tipoInvitado, share, downlo
                 document.body.appendChild(link)
                 link.click()
                 document.body.removeChild(link)
-                URL.revokeObjectURL(url) // liberar memoria
+                URL.revokeObjectURL(url)
             })
         }
-
     }
 
     logo.onerror = () => {

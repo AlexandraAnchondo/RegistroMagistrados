@@ -7,6 +7,7 @@ import { faQrcode, faShareAlt, faDownload } from "@fortawesome/free-solid-svg-ic
 import { QRCodeCanvas } from "qrcode.react";
 import '../styles/Listado.css';
 import { shareQrImage } from "../components/shareQRImage";
+import Loader from '../components/Loader'
 
 export default function MovimientosPage() {
     const [invitados, setInvitados] = useState([]);
@@ -48,12 +49,12 @@ export default function MovimientosPage() {
 
     const handleDownload = () => {
         const canvas = document.getElementById("qr-code");
-        shareQrImage(canvas, selected.nombre, selected.tipoInvitado, false, true);
+        shareQrImage(canvas, selected.nombre, selected.tipoInvitado, selected.lugar, selected.zona, false, true);
     };
 
     const handleShare = async () => {
         const canvas = document.getElementById("qr-code");
-        shareQrImage(canvas, selected.nombre, selected.tipoInvitado, true, false);
+        shareQrImage(canvas, selected.nombre, selected.tipoInvitado, selected.lugar, selected.zona, true, false);
     };
 
     const columns = [
@@ -92,23 +93,29 @@ export default function MovimientosPage() {
         <div className="inventario-container" style={{ flex: 1 }}>
             <h1>Listado de Invitados</h1>
 
-            <div className="data-grid-container" style={{ height: isMobile ? 400 : 600 }}>
-                <DataGrid
-                    rows={invitados}
-                    columns={columns}
-                    pageSize={isMobile ? 5 : 10}
-                    getRowId={(row) => row.id}
-                    sx={{
-                        boxShadow: 3,
-                        border: 2,
-                        borderColor: '#1976d2',
-                        '& .MuiDataGrid-cell:hover': {
-                            color: 'primary.main',
-                        },
-                    }}
-                    autoHeight={isMobile} // para que la tabla ajuste su altura automáticamente en móviles
-                />
-            </div>
+            {invitados.length === 0 ? (
+                <div className="loading-container" style={{ marginTop: "100px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Loader />
+                </div>
+            ) : (
+                <div className="data-grid-container" style={{ height: isMobile ? 400 : 600 }}>
+                    <DataGrid
+                        rows={invitados}
+                        columns={columns}
+                        pageSize={isMobile ? 5 : 10}
+                        getRowId={(row) => row.id}
+                        sx={{
+                            boxShadow: 3,
+                            border: 2,
+                            borderColor: '#1976d2',
+                            '& .MuiDataGrid-cell:hover': {
+                                color: 'primary.main',
+                            },
+                        }}
+                        autoHeight={isMobile} // para que la tabla ajuste su altura automáticamente en móviles
+                    />
+                </div>
+            )}
 
             {/* Modal QR */}
             <Modal open={!!selected} onClose={() => setSelected(null)}>
@@ -136,7 +143,12 @@ export default function MovimientosPage() {
                             lugar: selected?.lugar,
                             zona: selected?.zona
                         })}
-                        size={isMobile ? 150 : 200}
+                        size={isMobile ? 80 : 200}
+                        style={{
+                            width: isMobile ? 150 : 200,
+                            height: isMobile ? 150 : 200,
+                            marginTop: 10
+                        }}
                         includeMargin={true}
                     />
                     <Box sx={{

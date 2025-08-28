@@ -21,18 +21,18 @@ export default function LogoutButton() {
         <>
             <Button
                 variant="outlined"
-                color="error"
                 startIcon={<LogoutIcon />}
                 onClick={() => setOpen(true)}
+                className="logout-btn"
             >
                 Cerrar sesión
             </Button>
 
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>¿Cerrar sesión?</DialogTitle>
+                <DialogTitle>Cerrar sesión</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>
-                        ¿Estás seguro de que quieres cerrar tu sesión? Tendrás que volver a iniciar sesión para acceder otra vez.
+                    <DialogContentText style={{marginTop: 25}}>
+                        ¿Estás seguro de que quieres cerrar tu sesión?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

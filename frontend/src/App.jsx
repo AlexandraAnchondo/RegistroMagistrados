@@ -3,6 +3,7 @@ import { Outlet } from 'react-router';
 import { ReactRouterAppProvider } from '@toolpad/core/react-router';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddIcon from '@mui/icons-material/Add';
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import "./styles/App.css"
 
 const NAVIGATION = [
@@ -14,14 +15,14 @@ const NAVIGATION = [
   },
   {
     segment: 'form',
-    title: 'Agregar acceso',
+    title: 'Acceso',
     icon: <AddIcon />,
     pattern: 'form',
   },
   {
     segment: 'confirmados',
-    title: 'Ver confirmados',
-    icon: <AddIcon />,
+    title: 'Pendientes',
+    icon: <ChecklistIcon />,
     pattern: 'confirmados',
   },
 ];
