@@ -32,6 +32,18 @@ export const fetchInvitados = async () => {
     }
 };
 
+export const fetchInvitadosProtesta = async () => {
+    try {
+        const res = await axios.get(`${API_URL}/api/listado_protesta`, {
+            headers: getAuthHeaders(),
+            withCredentials: true,
+        });
+        return res.data;
+    } catch (err) {
+        handleApiError(err);
+    }
+};
+
 export const actualizarInvitado = async (id, body = {}) => {
     try {
         const res = await axios.put(`${API_URL}/api/invitado/${id}`, body, {

@@ -27,7 +27,7 @@ export default function EscanearInvitado() {
             } catch (err) {
                 console.warn("Scanner ya estaba detenido o limpio");
             }
-            // 🔹 Limpiar referencia para permitir reinicio
+            // Limpiar referencia para permitir reinicio
             html5QrCodeRef.current = null;
             processingRef.current = false; // resetear la flag
         }
@@ -47,21 +47,23 @@ export default function EscanearInvitado() {
                 { facingMode: "environment" },
                 { fps: 10, qrbox: isMobile ? 250 : 600 },
                 async (decodedText) => {
-                    if (processingRef.current) return; // evita llamadas múltiples
+                    if (processingRef.current) return;
                     processingRef.current = true;
 
+                    await stopScanner();
                     try {
                         const data = JSON.parse(decodedText);
                         const nombre = data?.nombre;
+
                         if (!nombre) {
                             setAlert({ open: true, message: "QR inválido", severity: "error" });
-                            processingRef.current = false;
+                            await stopScanner(); // paramos aunque sea inválido
                             return;
                         }
 
                         const res = await actualizarInvitado(data.id);
                         setResult(res);
-                        await stopScanner();
+                        await stopScanner(); // paramos después de un QR válido también
                     } catch (err) {
                         console.error(err);
 
@@ -73,16 +75,14 @@ export default function EscanearInvitado() {
                             setAlert({ open: true, message: "Error leyendo el QR", severity: "error" });
                         }
 
-                        processingRef.current = false;
+                        await stopScanner(); // también paramos si hubo error
                     }
-
                 }
             ).catch((err) => console.error("Error iniciando scanner:", err));
 
             return () => stopScanner().catch(() => { });
         }
     }, [scanning, isMobile]);
-
 
     return (
         <Box

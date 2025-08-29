@@ -9,6 +9,6 @@ export default defineConfig({
   server: {
     host: "localhost",
     port: 8080,
-    allowedHosts: ["e742ee64004c.ngrok-free.app"],
+    allowedHosts: ["c80806a9e8b9.ngrok-free.app"],
   },
 });

@@ -82,6 +82,7 @@ const StyledWrapper = styled.div`
     font-weight: 500;
     font-size: 20px;
     color: var(--submain2-color);
+    justify-content: center;
   }`;
 
 export default Card;

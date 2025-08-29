@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Card, CardContent, Typography, Grid, useMediaQuery } from '@mui/material';
 import '../styles/Confirmados.css';
 import Loader from '../components/Loader'
+import { fetchInvitadosProtesta } from '../data/API';
 
 export default function ConfirmadosPage() {
     const [pendientes, setPendientes] = useState(0);
@@ -10,33 +11,18 @@ export default function ConfirmadosPage() {
 
     const isMobile = useMediaQuery('(max-width:600px)');
 
-    const fetchData = () => {
-        const token = localStorage.getItem("token");
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/api/listado`, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            })
-            .then((res) => {
-                const data = res.data || [];
-                const pendientesCount = data.filter((inv) => inv.estatus === "Pendiente").length;
-                const confirmadosCount = data.filter((inv) => inv.estatus !== "Pendiente").length;
-                setPendientes(pendientesCount);
-                setConfirmados(confirmadosCount);
-            })
-            .catch((err) => {
-                console.error(err);
-                if (err.response && err.response.status === 401) {
-                    localStorage.removeItem("token");
-                    localStorage.setItem("isLoggedIn", "false");
-                    window.location.href = "/login";
-                }
-            });
-    };
-
     useEffect(() => {
-        fetchData();
-    }, []);
+            const loadData = async () => {
+                const data = await fetchInvitadosProtesta();
+                if(data) {
+                    const pendientesCount = data.filter((inv) => inv.estatus === "Pendiente").length;
+                    const confirmadosCount = data.filter((inv) => inv.estatus !== "Pendiente").length;
+                    setPendientes(pendientesCount);
+                    setConfirmados(confirmadosCount);
+                }
+            };
+            loadData();
+        }, []);
 
     return (
         <div style={{ flex: 1, padding: isMobile ? "16px" : "32px" }}>
